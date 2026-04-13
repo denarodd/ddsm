@@ -19,16 +19,24 @@ class _TelaInicialState extends State<TelaInicial> {
       appBar: AppBar(
         leading: Icon(Icons.menu),
         title: Text("App da 3G"),
-        actions: [Text("Aqui tem butão...")],
+        actions: [Text("Aqui tem um botão...")],
       ),
       body: ListView.builder(
         itemCount: alunoList.length,
         itemBuilder: (context, index) {
           return ListTile(
-            leading: Icon(Icons.person_4_rounded),
-              title: Text(alunoList[index].nome),
-              subtitle: Text(
+            leading: Image.asset("images/caobobo.jpeg"),
+            title: Text(alunoList[index].nome),
+            subtitle: Text(
               "Tel.: ${alunoList[index].telefone} | Matrícula: ${alunoList[index].matricula}",
+            ),
+            trailing: IconButton(
+              onPressed: () {
+                setState(() {
+                  alunoList.removeAt(index);
+                });
+              },
+              icon: Icon(Icons.delete),
             ),
           );
         },
@@ -78,7 +86,7 @@ class TelaFormulario extends StatelessWidget {
                 Aluno info = Aluno(nome.text, telefone.text, matricula.text);
                 Navigator.pop(context, info);
               } else {
-                debugPrint("Preencha todos os campos burrão");
+                debugPrint("Preencha todos os campos!");
               }
             },
             child: Text("Salvar"),
@@ -95,4 +103,55 @@ class Aluno {
   String matricula;
 
   Aluno(this.nome, this.telefone, this.matricula);
+}
+
+class TelaDetalhe extends StatelessWidget {
+  final Aluno aluno;
+
+  const TelaDetalhe({super.key, required this.aluno});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: Text("Dados do aluno")),
+      body: Padding(
+        padding: const EdgeInsets.all(20),
+        child: Column(
+          children: [
+            // ÍCONE GRANDE CENTRALIZADO
+            Center(child: Icon(Icons.person, size: 100)),
+
+            SizedBox(height: 30),
+
+            // DADOS À ESQUERDA
+            Align(
+              alignment: Alignment.centerLeft,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text("Nome: ${aluno.nome}"),
+                  SizedBox(height: 10),
+                  Text("Telefone: ${aluno.telefone}"),
+                  SizedBox(height: 10),
+                  Text("Matrícula: ${aluno.matricula}"),
+                ],
+              ),
+            ),
+
+            Spacer(),
+
+            // BOTÃO DE LIXEIRA CENTRALIZADO
+            Center(
+              child: IconButton(
+                icon: Icon(Icons.delete, size: 40),
+                onPressed: () {
+                  Navigator.pop(context, true);
+                },
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
 }
